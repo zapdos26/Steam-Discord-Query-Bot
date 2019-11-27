@@ -58,6 +58,10 @@ class Query(commands.Cog, name="Query"):
 
     @commands.Cog.listener()
     async def onready(self):
+        for guild in self.bot.guilds:
+            if str(guild.id) not in self.config:
+                self.config[str(guild.id)] = []
+                settings.save(self.config, "query.json")
         self.bot.loop.create_task(self.check_query())
 
     async def check_query(self):
