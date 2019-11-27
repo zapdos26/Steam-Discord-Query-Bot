@@ -66,10 +66,14 @@ class Query(commands.Cog, name="Query"):
             for guild in self.config:
                 for message in self.config[guild]:
                     try:
-                        messages.append(await self.bot.get_channel(message[0]).fetch_message(message[1]))
+                        channel = self.bot.get_channel(message[0])
+                        if channel is None:
+                            raise NotFound
+                        messages.append(await channel.fetch_message(message[1]))
                     except NotFound:
                         self.config[guild].remove(message)
                         settings.save(self.config, "query.json")
+
             for message in messages:
                 old_embed = message.embeds[0]
                 ip_port = message.embeds[0].description.split(":")
