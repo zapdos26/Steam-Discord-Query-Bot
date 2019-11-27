@@ -39,7 +39,7 @@ class Query(commands.Cog, name="Query"):
         try:
             with valve.source.a2s.ServerQuerier((ip, query_port)) as server:
                 info = server.info()
-        except:
+        except NoResponseError:
             await ctx.send("No response from the server. Make sure your IP and Query Port are correct!")
             return
         embed = Embed(title=info["server_name"], description=f"{ip}:{query_port}", color=Color.green())
