@@ -99,7 +99,7 @@ class Query(commands.Cog, name="Query"):
                 except NoResponseError:
                     color = Color.red()
                     player_count = 0
-                if old_embed.color != color or old_embed.fields[0].value != player_count:
+                if old_embed.color != color or old_embed.fields[0].value != str(player_count):
                     embed = Embed(title=title, description=old_embed.description, color=color)
                     embed.set_thumbnail(url=old_embed.thumbnail.url)
                     embed.add_field(name="Player Count", value=player_count, inline=True)
