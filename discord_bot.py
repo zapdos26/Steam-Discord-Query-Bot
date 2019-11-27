@@ -22,7 +22,7 @@ async def on_ready():
     print(bot.user.id)
     print('------')
     print(discord.utils.oauth_url(bot.user.id))
-    game = discord.Game("ARK")
+    game = discord.Game(config['STATUS'])
     await bot.change_presence(activity=game)
 
 
