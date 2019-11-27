@@ -33,7 +33,11 @@ class Query(commands.Cog, name="Query"):
             self.config[str(guild.id)] = []
             settings.save(self.config, "query.json")
 
-    @commands.command(pass_context=True, description='Add server to check status for', usage="!addserver IP Query_Port")
+    @commands.command(pass_context=True,
+                      description="Creates the server's embed and begins checking server's online status",
+                      usage="IP Query_Port [appid]",
+                      help="Example: !addserver 127.0.0.1 1234 346110"
+                      )
     @commands.has_permissions(manage_channels=True)
     async def addserver(self, ctx, ip, query_port: int, appid=None):
         try:
