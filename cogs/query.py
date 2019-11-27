@@ -86,16 +86,18 @@ class Query(commands.Cog, name="Query"):
             for message in messages:
                 old_embed = message.embeds[0]
                 ip_port = message.embeds[0].description.split(":")
+                title = old_embed.title
                 try:
                     with valve.source.a2s.ServerQuerier((ip_port[0], int(ip_port[1]))) as server:
                         info = server.info()
+                    title = info["server_name"]
                     color = Color.green()
                     player_count = info['player_count']
                 except NoResponseError:
                     color = Color.red()
                     player_count = 0
                 if old_embed.color != color or old_embed.fields[0].value == player_count:
-                    embed = Embed(title=old_embed.title, description=old_embed.description, color=color)
+                    embed = Embed(title=title, description=old_embed.description, color=color)
                     embed.set_thumbnail(url=old_embed.thumbnail.url)
                     embed.add_field(name="Player Count", value=player_count, inline=True)
                     await message.edit(embed=embed)
