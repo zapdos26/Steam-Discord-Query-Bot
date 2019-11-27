@@ -4,6 +4,7 @@ import valve.source.a2s
 from discord import Embed, Color
 from discord.errors import NotFound
 from discord.ext import commands
+from valve.source import NoResponseError
 
 from utils import settings
 
@@ -35,8 +36,12 @@ class Query(commands.Cog, name="Query"):
     @commands.command(pass_context=True, description='Add server to check status for', usage="!addserver IP Query_Port")
     @commands.has_permissions(manage_channels=True)
     async def addserver(self, ctx, ip, query_port: int, appid=None):
-        with valve.source.a2s.ServerQuerier((ip, query_port)) as server:
-            info = server.info()
+        try:
+            with valve.source.a2s.ServerQuerier((ip, query_port)) as server:
+                info = server.info()
+        except:
+            await ctx.send("No response from the server. Make sure your IP and Query Port are correct!")
+            return
         embed = Embed(title=info["server_name"], description=f"{ip}:{query_port}", color=Color.green())
         if appid is None:
             embed.set_thumbnail(url=f"https://steamcdn-a.akamaihd.net/steam/apps/{info['app_id']}/logo.png")
@@ -53,8 +58,8 @@ class Query(commands.Cog, name="Query"):
             await ctx.send(error)
         elif isinstance(error, commands.MissingPermissions):
             await ctx.send("You do not have permission to perform that command!")
-        elif isinstance(error, valve.source.NoResponseError):
-            await ctx.send("No response from the server. Make sure your IP and Query Port are correct!")
+        else:
+            print(error)
 
     @commands.Cog.listener()
     async def onready(self):
@@ -86,7 +91,7 @@ class Query(commands.Cog, name="Query"):
                         info = server.info()
                     color = Color.green()
                     player_count = info['player_count']
-                except valve.source.NoResponseError:
+                except NoResponseError:
                     color = Color.red()
                     player_count = 0
                 if old_embed.color != color or old_embed.fields[0].value == player_count:
