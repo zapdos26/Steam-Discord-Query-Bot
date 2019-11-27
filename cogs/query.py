@@ -77,9 +77,12 @@ class Query(commands.Cog, name="Query"):
                     try:
                         channel = self.bot.get_channel(message[0])
                         if channel is None:
-                            raise NotFound
+                            raise TypeError("Channel can't be type None")
                         messages.append(await channel.fetch_message(message[1]))
                     except NotFound:
+                        self.config[guild].remove(message)
+                        settings.save(self.config, "query.json")
+                    except TypeError:
                         self.config[guild].remove(message)
                         settings.save(self.config, "query.json")
 
