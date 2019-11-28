@@ -21,7 +21,7 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print('------')
-    print(discord.utils.oauth_url(bot.user.id))
+    print(f"{discord.utils.oauth_url(bot.user.id)}&permissions=84992")
     game = discord.Game(config['STATUS'])
     await bot.change_presence(activity=game)
 
