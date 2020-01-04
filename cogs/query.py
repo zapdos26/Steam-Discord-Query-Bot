@@ -53,6 +53,8 @@ class Query(commands.Cog, name="Query"):
             embed.set_thumbnail(url=f"https://steamcdn-a.akamaihd.net/steam/apps/{appid}/logo.png")
         embed.add_field(name="Player Count", value=info['player_count'], inline=True)
         message = await ctx.send(embed=embed)
+        if str(ctx.guild.id) not in self.config:
+            self.config[str(ctx.guild.id)] = []
         self.config[str(ctx.guild.id)].append([message.channel.id, message.id])
         settings.save(self.config, "query.json")
 
